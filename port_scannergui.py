@@ -4,8 +4,6 @@ from queue import Queue # Para una cola segura entre hilos
 import tkinter as tk # Módulo principal de Tkinter para la GUI
 from tkinter import scrolledtext, messagebox # scrolledtext para área de texto con scroll, messagebox para mensajes de alerta
 
-# --- Diccionarios de Datos ---
-
 # Diccionario de puertos comunes y sus servicios asociados
 COMMON_PORTS = {
     20: "FTP (Data)",
@@ -25,8 +23,7 @@ COMMON_PORTS = {
     8080: "HTTP Proxy / Tomcat"
 }
 
-# Diccionario simple para simular sugerencias de vulnerabilidades
-# Basadas en el servicio detectado (puedes expandirlo con más datos reales)
+# Diccionario simple para simular sugerencias de vulnerabilidades, puedes expandirlo con más datos reales
 VULNERABILITY_SUGGESTIONS = {
     "SSH": [
         "Considerar deshabilitar el acceso SSH por contraseña y usar claves SSH para mayor seguridad.",
@@ -50,7 +47,7 @@ VULNERABILITY_SUGGESTIONS = {
     ]
 }
 
-# --- Clase de la Aplicación GUI ---
+# Clase de la Aplicación GUI
 class PortScannerGUI:
     def __init__(self, master):
         """
@@ -64,8 +61,7 @@ class PortScannerGUI:
         self.print_lock = threading.Lock() # Candado para proteger la salida en consola (no tan crítico con la GUI)
         self.is_scanning = False # Bandera para controlar si el escaneo está activo o no
 
-        # --- Frame para los Campos de Entrada ---
-        # Un frame es un contenedor para organizar widgets
+        # Frame para los Campos de Entrada
         self.input_frame = tk.Frame(master, padx=10, pady=10)
         self.input_frame.pack(pady=5) # Empaca el frame en la ventana principal
 
@@ -97,7 +93,7 @@ class PortScannerGUI:
         self.scan_button = tk.Button(self.input_frame, text="Iniciar Escaneo", command=self.start_scan)
         self.scan_button.grid(row=4, column=0, columnspan=2, pady=10)
 
-        # --- Frame para los Resultados ---
+        # Frame para los Resultados
         self.results_frame = tk.LabelFrame(master, text="Resultados del Escaneo y Análisis", padx=10, pady=10)
         self.results_frame.pack(fill="both", expand=True, padx=10, pady=5)
 
@@ -120,20 +116,18 @@ class PortScannerGUI:
         """
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Crea un socket TCP/IP
-            sock.settimeout(1)  # Timeout de 1 segundo para la conexión (evita que se quede colgado)
+            sock.settimeout(1)  
             result = sock.connect_ex((target_host, port)) # Intenta conectar; connect_ex devuelve un código de error
             if result == 0: # Si el resultado es 0, el puerto está abierto
                 service = COMMON_PORTS.get(port, "Unknown Service") # Obtiene el servicio del diccionario o "Unknown"
                 self.log_message(f"Puerto {port} Abierto - Servicio: {service}") # Log en la GUI
                 self.simulate_vulnerability_analysis(service, port) # Llama al simulador de vulnerabilidades
-            sock.close() # Cierra el socket
+            sock.close()
         except socket.gaierror:
             # Error si el nombre de host no se puede resolver (ej. "dominio_inexistente")
             self.log_message(f"Error: No se pudo resolver el nombre de host '{target_host}'.")
             self.stop_scan() # Detiene el escaneo si el host no es válido
         except socket.error as e:
-            # Captura otros errores de conexión (ej. "Connection refused" para puertos cerrados)
-            # Solo muestra errores que no sean el típico "conexión rechazada" de un puerto cerrado
             if "Connection refused" not in str(e):
                 self.log_message(f"Error de conexión en el puerto {port}: {e}")
 
@@ -158,20 +152,19 @@ class PortScannerGUI:
                 # Intenta obtener un puerto de la cola con un timeout.
                 # Esto permite que el hilo verifique 'is_scanning' periódicamente.
                 port = self.queue.get(timeout=0.1)
-                self.port_scan(target_host, port) # Escanea el puerto
-                self.queue.task_done() # Marca la tarea como completada en la cola
-            except Exception: # Si la cola está vacía, se dispara una excepción
-                # Si el escaneo ya no está activo Y la cola está vacía, el hilo termina
+                self.port_scan(target_host, port) 
+                self.queue.task_done() 
+            except Exception: 
                 if not self.is_scanning and self.queue.empty():
                     break
-                continue # Si el escaneo sigue activo o la cola no está vacía, intenta de nuevo
+                continue 
 
     def start_scan(self):
         """
         Valida las entradas del usuario y comienza el proceso de escaneo.
         Crea y arranca los hilos de trabajo.
         """
-        if self.is_scanning: # Evita que se inicie un nuevo escaneo si ya hay uno en progreso
+        if self.is_scanning:
             messagebox.showinfo("Información", "Un escaneo ya está en progreso.")
             return
 
@@ -181,7 +174,7 @@ class PortScannerGUI:
             start_port = int(self.start_port_entry.get())
             end_port = int(self.end_port_entry.get())
             num_threads = int(self.num_threads_entry.get())
-        except ValueError: # Captura errores si los puertos o hilos no son números
+        except ValueError:
             messagebox.showerror("Error de Entrada", "Por favor, introduce números válidos para los puertos y el número de hilos.")
             return
 
@@ -196,10 +189,10 @@ class PortScannerGUI:
             messagebox.showerror("Error de Entrada", "El número de hilos debe ser mayor que 0.")
             return
 
-        self.scan_output.delete(1.0, tk.END) # Limpia el área de resultados de escaneos anteriores
+        self.scan_output.delete(1.0, tk.END) 
         self.log_message(f"Iniciando escaneo en {target_host} desde {start_port} hasta {end_port} con {num_threads} hilos...")
-        self.is_scanning = True # Establece la bandera de escaneo a True
-        self.scan_button.config(state=tk.DISABLED) # Deshabilita el botón de inicio durante el escaneo
+        self.is_scanning = True 
+        self.scan_button.config(state=tk.DISABLED) 
 
         # Llena la cola con todos los puertos a escanear
         for port in range(start_port, end_port + 1):
@@ -223,7 +216,6 @@ class PortScannerGUI:
         """
         # Si el escaneo está activo Y la cola está vacía Y todos los hilos están inactivos/vacíos
         if self.is_scanning and self.queue.empty() and all(not t.is_alive() or self.queue.empty() for t in self.threads):
-            # Da un pequeño retraso para asegurar que todos los logs se escriban
             self.master.after(500, self.finish_scan)
         elif self.is_scanning:
             self.master.after(100, self.check_scan_completion) # Vuelve a verificar después de un breve retraso
@@ -232,7 +224,7 @@ class PortScannerGUI:
         """
         Finaliza el escaneo, restablece la bandera y re-habilita el botón de inicio.
         """
-        if self.is_scanning: # Asegura que solo se finalice si aún estaba activo
+        if self.is_scanning: 
             self.is_scanning = False
             self.log_message("\nEscaneo de puertos completado.")
             self.scan_button.config(state=tk.NORMAL) # Re-habilita el botón de inicio
@@ -250,13 +242,13 @@ class PortScannerGUI:
             self.log_message("\nEscaneo detenido por el usuario.")
             self.scan_button.config(state=tk.NORMAL) # Re-habilita el botón de inicio
 
-# --- Punto de Entrada de la Aplicación ---
+# Punto de Entrada de la Aplicación
 if __name__ == "__main__":
     root = tk.Tk() # Crea la ventana principal de Tkinter
-    app = PortScannerGUI(root) # Crea una instancia de nuestra clase GUI
+    app = PortScannerGUI(root)
     # Agrega un botón de "Detener Escaneo" para mayor control del usuario
     stop_button = tk.Button(app.input_frame, text="Detener Escaneo", command=app.stop_scan)
-    stop_button.grid(row=4, column=1, columnspan=1, pady=10) # Lo posiciona junto al botón de inicio
+    stop_button.grid(row=4, column=1, columnspan=1, pady=10) 
     root.mainloop() # Inicia el bucle de eventos de Tkinter (la ventana se mantiene abierta y responde a interacciones)
 
 """"
