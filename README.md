@@ -1,6 +1,6 @@
 # Port Scanner and Basic Vulnerability Analyzer
 
-This Python program is a multi-functional **port scanner** with a **graphical user interface (GUI)**, capable of identifying open ports on a specified IP address or hostname. In addition to port detection, it incorporates a simulated **"vulnerability analyzer"** feature. This functionality identifies common services on known ports and, based on that identification, offers **security suggestions** and recommended configurations (without performing any actual exploitation). It's ideal for educational purposes and for those looking to expand their offensive security or monitoring portfolio.
+This project is a **basic port scanner** developed in Python with a simple graphical user interface (GUI). Its primary purpose is **educational**, allowing users to identify open ports and understand how the scan works. It includes a **vulnerability scan simulation** that offers general security suggestions for known services, without performing actual vulnerability detection or exploitation. It is an ideal tool for learning purposes and for building a starting portfolio in the field of cybersecurity.
 
 ## Key Features
 
