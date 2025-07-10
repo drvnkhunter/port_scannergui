@@ -266,7 +266,4 @@ en una dirección IP o nombre de host dada. Además, incluye una funcionalidad s
 basándose en esa identificación, sugerir posibles vulnerabilidades o configuraciones inseguras 
 (sin explotarlas realmente). Ya integra una GUI para ingresar los datos en una simulación de IDS/IPS.
 
-Vol. 1.1.
-Ing. Francisco Daniel Jiménez Cunjamá =)
-
 """
