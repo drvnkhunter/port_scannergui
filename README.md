@@ -69,7 +69,6 @@ Follow these steps to get the Port Scanner up and running:
 
 * **[Francisco Daniel Jiménez Cunjamá]**
     * GitHub: [@drvnkhunter](https://github.com/drvnkhunter)
-    * [LinkedIn](https://www.linkedin.com/in/frandanielcunjama/)
-    *(Make sure to replace the placeholders with your actual information and correct links, if they are different from these.)*
+    * Linkedin [LinkedIn](https://www.linkedin.com/in/frandanielcunjama/)
 
 ---
