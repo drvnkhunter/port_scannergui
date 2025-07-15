@@ -67,7 +67,7 @@ Follow these steps to get the Port Scanner up and running:
 
 ## Author
 
-* **[Francisco Daniel Jiménez Cunjamá]**
+- **Francisco Daniel Jiménez Cunjamá**
 - 📧 Email: ceo@cunsecurity.com 
 - 💼 LinkedIn: [frandanielcunjama](https://www.linkedin.com/in/frandanielcunjama/)
 - 👽 TryHackMe: [drvnkhunter](https://tryhackme.com/p/drvnkhunter)
